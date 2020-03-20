@@ -407,19 +407,29 @@ func (s *ObjectService) PostRestore(ctx context.Context, name string, opt *Objec
 // 	resp, err := s.client.send(ctx, &sendOpt)
 // 	return resp, err
 // }
+type DeleteObject struct {
+	Key       string `xml:",omitempty"`
+	VersionId string `xml:",omitempty"`
+}
 
 // ObjectDeleteMultiOptions is the option of DeleteMulti
 type ObjectDeleteMultiOptions struct {
-	XMLName xml.Name `xml:"Delete" header:"-"`
-	Quiet   bool     `xml:"Quiet" header:"-"`
-	Objects []Object `xml:"Object" header:"-"`
+	XMLName xml.Name       `xml:"Delete" header:"-"`
+	Quiet   bool           `xml:"Quiet" header:"-"`
+	Objects []DeleteObject `xml:"Object" header:"-"`
 	//XCosSha1 string `xml:"-" header:"x-cos-sha1"`
+}
+type DeleteContainer struct {
+	Key                   string `xml:",omitempty"`
+	VersionId             string `xml:",omitempty"`
+	DeleteMarker          string `xml:",omitempty"`
+	DeleteMarkerVersionId string `xml:",omitempty"`
 }
 
 // ObjectDeleteMultiResult is the result of DeleteMulti
 type ObjectDeleteMultiResult struct {
-	XMLName        xml.Name `xml:"DeleteResult"`
-	DeletedObjects []Object `xml:"Deleted,omitempty"`
+	XMLName        xml.Name          `xml:"DeleteResult"`
+	DeletedObjects []DeleteContainer `xml:"Deleted,omitempty"`
 	Errors         []struct {
 		Key     string
 		Code    string
