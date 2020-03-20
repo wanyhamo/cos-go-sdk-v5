@@ -105,7 +105,7 @@ type Bucket struct {
 
 // BucketGetVserionOptions is the option of GetVersions
 type BucketGetVserionsOptions struct {
-	Versions     string `url:"versions,omitempty"`
+	Versions     string `url:"versions"`
 	Prefix       string `url:"prefix,omitempty"`
 	Delimiter    string `url:"delimiter,omitempty"`
 	EncodingType string `url:"encoding-type,omitempty"`
