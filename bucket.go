@@ -105,7 +105,7 @@ type Bucket struct {
 
 // BucketGetVserionOptions is the option of GetVersions
 type BucketGetVserionsOptions struct {
-	Versions     string `url:"versions"`
+	Versions     string `url:"versions,omitempty"`
 	Prefix       string `url:"prefix,omitempty"`
 	Delimiter    string `url:"delimiter,omitempty"`
 	EncodingType string `url:"encoding-type,omitempty"`
@@ -125,7 +125,7 @@ type Container struct {
 
 // BucketGetVersionsResult is the result of GetBucket
 type BucketGetVersionsResult struct {
-	XMLName             xml.Name `xml:"ListBucketResult"`
+	XMLName             xml.Name `xml:"ListVersionsResult"`
 	Name                string
 	Prefix              string `xml:"Prefix,omitempty"`
 	KeyMarker           string `xml:"KeyMarker,omitempty"`
@@ -148,7 +148,7 @@ func (s *BucketService) GetVersions(ctx context.Context, opt *BucketGetVserionsO
 	var res BucketGetVersionsResult
 	sendOpt := sendOptions{
 		baseURL:  s.client.BaseURL.BucketURL,
-		uri:      "/",
+		uri:      "/?versions",
 		method:   http.MethodGet,
 		optQuery: opt,
 		result:   &res,
