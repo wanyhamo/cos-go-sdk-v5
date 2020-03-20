@@ -102,3 +102,57 @@ type Bucket struct {
 	Region       string `xml:"Location,omitempty"`
 	CreationDate string `xml:",omitempty"`
 }
+
+// BucketGetVserionOptions is the option of GetVersions
+type BucketGetVserionsOptions struct {
+	Versions     string `url:"versions,omitempty"`
+	Prefix       string `url:"prefix,omitempty"`
+	Delimiter    string `url:"delimiter,omitempty"`
+	EncodingType string `url:"encoding-type,omitempty"`
+	Marker       string `url:"marker,omitempty"`
+	MaxKeys      int    `url:"max-keys,omitempty"`
+}
+type Container struct {
+	Key          string `xml:",omitempty"`
+	ETag         string `xml:",omitempty"`
+	Size         int    `xml:",omitempty"`
+	LastModified string `xml:",omitempty"`
+	StorageClass string `xml:",omitempty"`
+	Owner        *Owner `xml:",omitempty"`
+	VersionId    string `xml:",omitempty"`
+	IsLatest     string `xml:",omitempty"`
+}
+
+// BucketGetVersionsResult is the result of GetBucket
+type BucketGetVersionsResult struct {
+	XMLName             xml.Name `xml:"ListBucketResult"`
+	Name                string
+	Prefix              string `xml:"Prefix,omitempty"`
+	KeyMarker           string `xml:"KeyMarker,omitempty"`
+	VersionIdMarker     string `xml:"VersionIdMarker,omitempty"`
+	Delimiter           string `xml:"Delimiter,omitempty"`
+	MaxKeys             int
+	IsTruncated         bool
+	NextKeyMarker       string      `xml:"NextKeyMarker,omitempty"`
+	NextVersionIdMarker string      `xml:"NextVersionIdMarker,omitempty"`
+	CommonPrefixes      []string    `xml:"CommonPrefixes>Prefix,omitempty"`
+	EncodingType        string      `xml:"Encoding-Type,omitempty"`
+	Vsersion            []Container `xml:"Version,omitempty"`
+	DeleteMarker        []Container `xml:"DeleteMarker,omitempty"`
+}
+
+// Get Bucket请求等同于 List Object请求，可以列出该Bucket下部分或者所有Object，发起该请求需要拥有Read权限。
+//
+// https://www.qcloud.com/document/product/436/7734
+func (s *BucketService) GetVersions(ctx context.Context, opt *BucketGetVserionsOptions) (*BucketGetVersionsResult, *Response, error) {
+	var res BucketGetVersionsResult
+	sendOpt := sendOptions{
+		baseURL:  s.client.BaseURL.BucketURL,
+		uri:      "/",
+		method:   http.MethodGet,
+		optQuery: opt,
+		result:   &res,
+	}
+	resp, err := s.client.send(ctx, &sendOpt)
+	return &res, resp, err
+}
